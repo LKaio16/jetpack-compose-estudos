@@ -43,8 +43,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModelProvider
@@ -149,13 +155,27 @@ class MainActivity : ComponentActivity() {
                   }
   */
 
+                val annotatedString = buildAnnotatedString {
+                    blueGradientText("Kaio")
+                    append("\n\n")
+                    pinkBlueGradientText("Ferreira")
+                    append("\n\n")
+                    blueGradientText(":)")
+                }
+
                 Column(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .background(color = Color.Red),
+                        .background(color = Color.Black),
                     verticalArrangement = Arrangement.Center
                 ) {
 
+
+                    Text(
+                        text = annotatedString,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
 
                     LazyColumn(
                         modifier = Modifier
@@ -181,7 +201,6 @@ class MainActivity : ComponentActivity() {
 
             }
 
-
             /*   BoasVindas("Kaio")
                Button(onClick = { println("A") }, content = {
                    Text(text = "butao")
@@ -206,6 +225,40 @@ class MainActivity : ComponentActivity() {
                    )
                }*/
 
+        }
+    }
+
+
+    private fun AnnotatedString.Builder.blueGradientText(text: String) {
+        withStyle(
+            style = SpanStyle(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        Color(0xFF2788C7),
+                        Color(0xFF00BBD4)
+                    )
+                ), fontSize = 42.sp, fontWeight = FontWeight.Medium
+            )
+        )
+        {
+            append(text)
+        }
+    }
+
+
+    private fun AnnotatedString.Builder.pinkBlueGradientText(text: String) {
+        withStyle(
+            style = SpanStyle(
+                brush = Brush.linearGradient(
+                    colors = listOf(
+                        Color(0xFFFF3B85),
+                        Color(0xFF00BBD4)
+                    )
+                ), fontSize = 48.sp, fontWeight = FontWeight.Medium
+            )
+        )
+        {
+            append(text)
         }
     }
 }
@@ -247,7 +300,9 @@ fun CaixaTextoStateless(
             onValueChange = {
                 onValueChanged(it)
             },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(), placeholder = {
+                Text("Nome")
+            },
             trailingIcon = {
                 Icon(
                     imageVector = Icons.Default.Add,
