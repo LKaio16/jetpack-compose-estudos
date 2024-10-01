@@ -47,15 +47,22 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModelProvider
 import com.example.firstapplication.ui.theme.FirstApplicationTheme
 
 //import java.lang.reflect.Modifier
 
 
 class MainActivity : ComponentActivity() {
+
+    val viewModel by lazy { ViewModelProvider(this).get(MyViewModel::class.java) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
+            val state = viewModel.state.value
+
             FirstApplicationTheme {
 
                 /*// Material Design // DEU CERTO :)
@@ -148,13 +155,6 @@ class MainActivity : ComponentActivity() {
                         .background(color = Color.Red),
                     verticalArrangement = Arrangement.Center
                 ) {
-                    var textState by remember {
-                        mutableStateOf("")
-                    }
-
-                    val nameListState = remember {
-                        mutableStateListOf<String>()
-                    }
 
 
                     LazyColumn(
@@ -162,16 +162,16 @@ class MainActivity : ComponentActivity() {
                             .fillMaxWidth()
                             .background(color = Color.Green)
                     ) {
-                        items(nameListState.size) {
-                            Text(text = nameListState[it])
+                        items(state.namesList.size) {
+                            Text(text = state.namesList[it])
                         }
                     }
 
-                    CaixaTextoStateless(textValue = textState, onValueChanged = {
-                        textState = it
+                    CaixaTextoStateless(textValue = state.text, onValueChanged = {
+                        viewModel.updateText(it)
                     }, onAddClick = {
-                        nameListState.add(textState)
-                        textState = ""
+                        viewModel.updateNameList()
+                        viewModel.updateText("")
                     })
 
                     Spacer(modifier = Modifier.height(5.dp))
